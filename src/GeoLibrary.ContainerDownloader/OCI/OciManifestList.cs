@@ -13,10 +13,10 @@ internal class OciManifestList : ManifestListBase
     {
     }
 
-    public override Task<IContainerManifest> GetManifestAsync(IHttpClient client, DockerAuthentication auth, ContainerPlatform platform, CancellationToken token)
+    public override Task<IContainerManifest> GetManifestAsync(IHttpClient client, string companyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
         client.AddDefaultRequestHeaders("Accept", "application/vnd.oci.image.manifest.v1+json");
-        return base.GetManifestAsync(client, auth, platform, token);
+        return base.GetManifestAsync(client, companyName, imageName, platform, token);
     }
 
     protected override string GetMediaType()

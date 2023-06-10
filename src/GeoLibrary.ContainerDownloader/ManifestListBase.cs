@@ -70,16 +70,16 @@ public abstract class ManifestListBase
 
     protected abstract string GetMediaType();
 
-    public virtual Task<IContainerManifest> GetManifestAsync(HttpClient client, DockerAuthentication auth, ContainerPlatform platform, CancellationToken token)
+    public virtual Task<IContainerManifest> GetManifestAsync(HttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
-        return GetManifestAsync(new HttpClientWrapper(client), auth, platform, token);
+        return GetManifestAsync(new HttpClientWrapper(client), campanyName, imageName, platform, token);
     }
 
-    public virtual async Task<IContainerManifest> GetManifestAsync(IHttpClient client, DockerAuthentication auth, ContainerPlatform platform, CancellationToken token)
+    public virtual async Task<IContainerManifest> GetManifestAsync(IHttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
         var manifest = GetManifest(platform);
 
-        var url = $"https://registry-1.docker.io/v2/{auth.CompanyName}/{auth.ImageName}/manifests/{manifest.Digest}";
+        var url = $"https://registry-1.docker.io/v2/{campanyName}/{imageName}/manifests/{manifest.Digest}";
         var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
 
         using var jsonDoc = JsonDocument.Parse(content);
@@ -94,7 +94,7 @@ public abstract class ManifestListBase
         var schemaVersion = root.GetProperty("schemaVersion").GetInt32();
         var mediaType = root.GetProperty("mediaType").GetString() ?? throw new JsonElementMissingException("mediaType");
 
-        return new DockerManifest(auth.CompanyName, auth.ImageName, schemaVersion, mediaType, config, layers.ToArray());
+        return new DockerManifest(campanyName, imageName, schemaVersion, mediaType, config, layers.ToArray());
     }
 
     private static DockerManifest.Layer ToLayer(JsonElement element)

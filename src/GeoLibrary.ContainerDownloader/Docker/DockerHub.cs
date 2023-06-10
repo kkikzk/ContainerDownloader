@@ -21,12 +21,12 @@ public class DockerHub
             (SchemaVersion, MediaType) = (schemaVersion, mediaType);
     }
 
-    public static Task<IContainerManifest> GetConfigAsync(HttpClient client, DockerAuthentication auth, ContainerPlatform platform, string tag, CancellationToken token)
+    public static Task<IContainerManifest> GetConfigAsync(HttpClient client, string companyName, string imageName, ContainerPlatform platform, string tag, CancellationToken token)
     {
-        return GetConfigAsync(new HttpClientWrapper(client), auth, platform, tag, token);
+        return GetConfigAsync(new HttpClientWrapper(client), companyName, imageName, platform, tag, token);
     }
 
-    public static async Task<IContainerManifest> GetConfigAsync(IHttpClient client, DockerAuthentication auth, ContainerPlatform platform, string tag, CancellationToken token)
+    public static async Task<IContainerManifest> GetConfigAsync(IHttpClient client, string companyName, string imageName, ContainerPlatform platform, string tag, CancellationToken token)
     {
         client.AddDefaultRequestHeaders("Accept", "application/vnd.docker.distribution.manifest.v2+json");
         client.AddDefaultRequestHeaders("Accept", DockerManifestList.MediaType);
@@ -38,8 +38,8 @@ public class DockerHub
         var deserialized = JsonSerializer.Deserialize<Content>(content);
         return (deserialized.SchemaVersion, deserialized.MediaType) switch
         {
-            (2, DockerManifestList.MediaType) => await new DockerManifestList(content).GetManifestAsync(client, auth, platform, token).ConfigureAwait(false),
-            (2, OciManifestList.MediaType) => await new OciManifestList(content).GetManifestAsync(client, auth, platform, token).ConfigureAwait(false),
+            (2, DockerManifestList.MediaType) => await new DockerManifestList(content).GetManifestAsync(client, companyName, imageName, platform, token).ConfigureAwait(false),
+            (2, OciManifestList.MediaType) => await new OciManifestList(content).GetManifestAsync(client, companyName, imageName, platform, token).ConfigureAwait(false),
             _ => throw new ContainerDownloaderException($"Schema not supported. [version={deserialized.SchemaVersion}, mediaType={deserialized.MediaType}]"),
         };
     }

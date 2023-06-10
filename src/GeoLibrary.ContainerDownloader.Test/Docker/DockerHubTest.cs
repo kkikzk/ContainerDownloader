@@ -110,7 +110,7 @@ public class DockerHubTest
         await auth.ExecuteAsync(client, cs.Token);
 
         // act
-        var actual = await DockerHub.GetConfigAsync(client, auth, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
+        var actual = await DockerHub.GetConfigAsync(client, auth.CompanyName, auth.ImageName, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
         await actual.PullAsync(client, new DirectoryInfo(@"C:\Users\10087901428\Desktop\temp\temp"), cs.Token);
 
         // assert
