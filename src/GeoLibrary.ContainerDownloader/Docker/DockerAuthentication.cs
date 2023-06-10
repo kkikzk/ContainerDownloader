@@ -10,7 +10,7 @@ namespace GeoLibrary.ContainerDownloader.Docker;
 
 public class DockerAuthentication
 {
-    private record struct Content
+    private readonly record struct Content
     {
         [JsonPropertyName("token")]
         public string Token { get; }
@@ -31,7 +31,7 @@ public class DockerAuthentication
     public string AccessToken { private set; get; } = string.Empty;
 
     [DebuggerStepThrough]
-    public DockerAuthentication(string companyName, string imageName, DockerRegistryAction action)
+    public DockerAuthentication(string companyName, string imageName, DockerRegistryAction action = DockerRegistryAction.All)
     {
         CompanyName = companyName;
         ImageName = imageName;

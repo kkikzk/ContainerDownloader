@@ -1,7 +1,7 @@
 using GeoLibrary.ContainerDownloader.Docker;
 using GeoLibrary.ContainerDownloader.Test.Mock;
 
-namespace GeoLibrary.ContainerDownloader.Test;
+namespace GeoLibrary.ContainerDownloader.Test.Docker;
 
 public class DockerHubCredentialTest
 {

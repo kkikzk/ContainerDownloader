@@ -32,4 +32,9 @@ internal class HttpClientMock : IHttpClient
     {
         _action(name, value);
     }
+
+    public Task<Stream> GetStreamAsync(string requestUri, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

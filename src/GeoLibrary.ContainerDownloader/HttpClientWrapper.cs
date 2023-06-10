@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,5 +27,11 @@ public class HttpClientWrapper : IHttpClient
     public void AddDefaultRequestHeaders(string name, string value)
     {
         _httpClient.DefaultRequestHeaders.Add(name, value);
+    }
+
+    [DebuggerStepThrough]
+    public Task<Stream> GetStreamAsync(string requestUri, CancellationToken _)
+    {
+        return _httpClient.GetStreamAsync(requestUri);
     }
 }
