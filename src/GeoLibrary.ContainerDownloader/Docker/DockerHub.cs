@@ -32,7 +32,7 @@ public class DockerHub
         client.AddDefaultRequestHeaders("Accept", DockerManifestList.MediaType);
         client.AddDefaultRequestHeaders("Accept", OciManifestList.MediaType);
 
-        var url = $"https://registry-1.docker.io/v2/{auth.CompanyName}/{auth.ImageName}/manifests/{tag}";
+        var url = $"https://registry-1.docker.io/v2/{companyName}/{imageName}/manifests/{tag}";
         var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
 
         var deserialized = JsonSerializer.Deserialize<Content>(content);
