@@ -22,14 +22,22 @@ public class HttpClientWrapper : IHttpClient
         var response = await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         if (response.IsSuccessStatusCode)
         {
+#if NETSTANDARD2_1
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#endif
         }
         else
         {
             var content = string.Empty;
             try
             {
+#if NETSTANDARD2_1
                 content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#else
+                content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#endif
             }
             catch
             {
@@ -46,8 +54,12 @@ public class HttpClientWrapper : IHttpClient
     }
 
     [DebuggerStepThrough]
-    public Task<Stream> GetStreamAsync(string requestUri, CancellationToken _)
+    public Task<Stream> GetStreamAsync(string requestUri, CancellationToken cancellationToken)
     {
+#if NETSTANDARD2_1
         return _httpClient.GetStreamAsync(requestUri);
+#else
+        return _httpClient.GetStreamAsync(requestUri, cancellationToken);
+#endif
     }
 }
