@@ -20,7 +20,23 @@ public class HttpClientWrapper : IHttpClient
     public async Task<string> GetContentAsStringAsync(string requestUri, CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
-        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        else
+        {
+            var content = string.Empty;
+            try
+            {
+                content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+                // do nothing.
+            }
+            throw new ContainerDownloaderException($"Failed to get a content.[Status code={response.StatusCode}{(string.IsNullOrEmpty(content) ? string.Empty : ", Content = " + content)}]");
+        }
     }
 
     [DebuggerStepThrough]

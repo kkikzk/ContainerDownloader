@@ -1,10 +1,9 @@
-﻿using GeoLibrary.ContainerDownloader.Docker;
-using System.Collections.Generic;
+﻿using System;
 using System.Net.Http;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GeoLibrary.ContainerDownloader;
 
@@ -70,50 +69,28 @@ public abstract class ManifestListBase
 
     protected abstract string GetMediaType();
 
-    public virtual Task<IContainerManifest> GetManifestAsync(HttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
+    public virtual Task<ContainerManifest> GetManifestAsync(HttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
         return GetManifestAsync(new HttpClientWrapper(client), campanyName, imageName, platform, token);
     }
 
-    public virtual async Task<IContainerManifest> GetManifestAsync(IHttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
+    public virtual async Task<ContainerManifest> GetManifestAsync(IHttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
-        var manifest = GetManifest(platform);
-
-        var url = $"https://registry-1.docker.io/v2/{campanyName}/{imageName}/manifests/{manifest.Digest}";
-        var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
-
-        using var jsonDoc = JsonDocument.Parse(content);
-        var root = jsonDoc.RootElement;
-
-        var layers = new List<DockerManifest.Layer>();
-        foreach (var it in root.GetProperty("layers").EnumerateArray())
+        try
         {
-            layers.Add(ToLayer(it));
+            var digest = GetDigest(platform);
+            var url = $"https://registry-1.docker.io/v2/{campanyName}/{imageName}/manifests/{digest}";
+            var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
+
+            return JsonSerializer.Deserialize<ContainerManifest>(content);
         }
-        var config = ToConfig(root.GetProperty("config"));
-        var schemaVersion = root.GetProperty("schemaVersion").GetInt32();
-        var mediaType = root.GetProperty("mediaType").GetString() ?? throw new JsonElementMissingException("mediaType");
-
-        return new DockerManifest(campanyName, imageName, schemaVersion, mediaType, config, layers.ToArray());
+        catch (Exception ex)
+        {
+            throw new ContainerDownloaderException("Failed to get a manifest", ex);
+        }
     }
 
-    private static DockerManifest.Layer ToLayer(JsonElement element)
-    {
-        var mediaType = element.GetProperty("mediaType").GetString() ?? throw new JsonElementMissingException("mediaType");
-        var digest = element.GetProperty("digest").GetString() ?? throw new JsonElementMissingException("digest");
-        var size = element.GetProperty("size").GetInt32();
-        return new DockerManifest.Layer(mediaType, digest, size);
-    }
-
-    private static DockerManifest.ConfigData ToConfig(JsonElement element)
-    {
-        var configMediaType = element.GetProperty("mediaType").GetString() ?? throw new JsonElementMissingException("mediaType");
-        var configDigest = element.GetProperty("digest").GetString() ?? throw new JsonElementMissingException("digest");
-        var configSize = element.GetProperty("size").GetInt32();
-        return new DockerManifest.ConfigData(configMediaType, configDigest, configSize);
-    }
-
-    private Manifest GetManifest(ContainerPlatform platform)
+    private string GetDigest(ContainerPlatform platform)
     {
         foreach (var it in _content.Manifests)
         {
@@ -121,7 +98,7 @@ public abstract class ManifestListBase
             {
                 if (string.IsNullOrEmpty(it.Platform.Variant) && string.IsNullOrEmpty(platform.Variant))
                 {
-                    return it;
+                    return it.Digest;
                 }
                 else if (!string.IsNullOrEmpty(it.Platform.Variant) || string.IsNullOrEmpty(platform.Variant))
                 {
@@ -133,7 +110,7 @@ public abstract class ManifestListBase
                 }
                 else if (it.Platform.Architecture == platform.Architecture)
                 {
-                    return it;
+                    return it.Digest;
                 }
             }
         }

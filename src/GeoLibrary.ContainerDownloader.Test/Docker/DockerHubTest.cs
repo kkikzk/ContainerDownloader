@@ -111,9 +111,10 @@ public class DockerHubTest
 
         // act
         var actual = await DockerHub.GetConfigAsync(client, auth.CompanyName, auth.ImageName, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
-        await actual.PullAsync(client, new DirectoryInfo(@"C:\Users\10087901428\Desktop\temp\temp"), cs.Token);
+        //await actual.PullAsync(client, new DirectoryInfo(@"C:\Users\10087901428\Desktop\temp\temp"), cs.Token);
 
         // assert
-
+        Assert.Equal("sha256:1f6ddc1b2547b2e38dc25b265ac585238a3c23da63976722864dab2a069c74f4", actual.Config.Digest);
+        Assert.Equal("sha256:837dd4791cdc6f670708c3a570b72169263806d7ccc2783173b9e88f94878271", actual.Layers[0].Digest);
     }
 }
