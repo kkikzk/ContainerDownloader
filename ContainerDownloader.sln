@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoLibrary.ContainerDownloa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoLibrary.ContainerDownloader.Test", "src\GeoLibrary.ContainerDownloader.Test\GeoLibrary.ContainerDownloader.Test.csproj", "{F9B6101A-8B22-4443-9E40-598249AFE05F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_deploy", "_deploy", "{BBB6EDF8-1A9A-4672-B8A7-AEBE4A4A611C}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\github-actions.yml = .github\workflows\github-actions.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
