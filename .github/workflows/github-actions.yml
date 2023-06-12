@@ -11,12 +11,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.0'
+          dotnet-version: |
+            6.0.x
+            7.0.x
 
       - name: Restore Nuget packages
         run: dotnet restore
