@@ -45,23 +45,23 @@ public class DockerHub
         };
     }
 
-    //public Task PullAsync(HttpClient client, DirectoryInfo dir, string companyName, string imageName, ContainerManifest manifest, CancellationToken token)
-    //{
-    //    return PullAsync(new HttpClientWrapper(client), dir, companyName, imageName, manifest, token);
-    //}
+    public Task PullAsync(HttpClient client, DirectoryInfo dir, string companyName, string imageName, ContainerManifest manifest, CancellationToken token)
+    {
+        return PullAsync(new HttpClientWrapper(client), dir, companyName, imageName, manifest, token);
+    }
 
-    //public async Task PullAsync(IHttpClient client, DirectoryInfo dir, string companyName, string imageName, ContainerManifest manifest, CancellationToken token)
-    //{
-    //    for (var i = 0; i < manifest.Layers.Length; ++i)
-    //    {
-    //        var url = $"https://registry-1.docker.io/v2/{companyName}/{imageName}/blobs/{manifest.Layers[i].Digest}";
-    //        var file = new FileInfo(Path.Combine(dir.FullName, $"layer{i}.tar.gz"));
-    //        var stream = await client.GetStreamAsync(url, token).ConfigureAwait(false);
-    //        using (var destinationStream = File.Create(file.FullName))
-    //        {
-    //            // 元のストリームを出力先のストリームにコピー
-    //            stream.CopyTo(destinationStream);
-    //        }
-    //    }
-    //}
+    public async Task PullAsync(IHttpClient client, DirectoryInfo dir, string companyName, string imageName, ContainerManifest manifest, CancellationToken token)
+    {
+        for (var i = 0; i < manifest.Layers.Length; ++i)
+        {
+            var url = $"https://registry-1.docker.io/v2/{companyName}/{imageName}/blobs/{manifest.Layers[i].Digest}";
+            var file = new FileInfo(Path.Combine(dir.FullName, $"layer{i}.tar.gz"));
+            var stream = await client.GetStreamAsync(url, token).ConfigureAwait(false);
+            using (var destinationStream = File.Create(file.FullName))
+            {
+                // 元のストリームを出力先のストリームにコピー
+                stream.CopyTo(destinationStream);
+            }
+        }
+    }
 }
