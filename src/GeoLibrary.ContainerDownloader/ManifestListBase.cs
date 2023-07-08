@@ -82,7 +82,7 @@ public abstract class ManifestListBase
             var url = $"https://registry-1.docker.io/v2/{campanyName}/{imageName}/manifests/{digest}";
             var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<ContainerManifest>(content);
+            return new ContainerManifest(content);
         }
         catch (Exception ex)
         {

@@ -10,7 +10,7 @@ public class DockerHubCredentialTest
     public async Task Test001()
     {
         // arrange
-        IEnumerable<string> getContens()
+        static IEnumerable<string> getContens()
         {
             yield return @"
             {
@@ -21,7 +21,7 @@ public class DockerHubCredentialTest
             } 
             ";
         };
-        void defaultRequestHeaderAssert(string name, string value)
+        static void defaultRequestHeaderAssert(string name, string value)
         {
             Assert.Equal("Authorization", name);
             Assert.Equal($"Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsIng1YyI6WyJNSUlDK1RDQ0FwK2dBd0lCQWdJQkFEQUtCZ2dxaGtqT1BRUURBakJHTVVRd1FnWURWUVFERXp0U1RVbEdPbEZNUmpRNlEwZFFNenBSTWtWYU9sRklSRUk2VkVkRlZUcFZTRlZNT2taTVZqUTZSMGRXV2pwQk5WUkhPbFJMTkZNNlVVeElTVEFlRncweU16QXhNRFl3TkRJM05EUmFGdzB5TkRBeE1qWXdOREkzTkRSYU1FWXhSREJDQmdOVkJBTVRPME5EVlVZNlNqVkhOanBGUTFORU9rTldSRWM2VkRkTU1qcEtXa1pST2xOTk0wUTZXRmxQTkRwV04wTkhPa2RHVjBJNldsbzFOam8wVlVSRE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBek4wYjBqN1V5L2FzallYV2gyZzNxbzZKaE9rQWpYV0FVQmNzSHU2aFlaUkZMOXZlODEzVEI0Y2w4UWt4Q0k0Y1VnR0duR1dYVnhIMnU1dkV0eFNPcVdCcnhTTnJoU01qL1ZPKzYvaVkrOG1GRmEwR2J5czF3VDVjNlY5cWROaERiVGNwQXVYSjFSNGJLdSt1VGpVS0VIYXlqSFI5TFBEeUdnUC9ubUFadk5PWEdtclNTSkZJNnhFNmY3QS8rOVptcWgyVlRaQlc0cXduSnF0cnNJM2NveDNQczMwS2MrYUh3V3VZdk5RdFNBdytqVXhDVVFoRWZGa0lKSzh6OVdsL1FjdE9EcEdUeXNtVHBjNzZaVEdKWWtnaGhGTFJEMmJQTlFEOEU1ZWdKa2RQOXhpaW5sVGx3MjBxWlhVRmlqdWFBcndOR0xJbUJEWE0wWlI1YzVtU3Z3SURBUUFCbzRHeU1JR3ZNQTRHQTFVZER3RUIvd1FFQXdJSGdEQVBCZ05WSFNVRUNEQUdCZ1JWSFNVQU1FUUdBMVVkRGdROUJEdERRMVZHT2tvMVJ6WTZSVU5UUkRwRFZrUkhPbFEzVERJNlNscEdVVHBUVFRORU9saFpUelE2VmpkRFJ6cEhSbGRDT2xwYU5UWTZORlZFUXpCR0JnTlZIU01FUHpBOWdEdFNUVWxHT2xGTVJqUTZRMGRRTXpwUk1rVmFPbEZJUkVJNlZFZEZWVHBWU0ZWTU9rWk1WalE2UjBkV1dqcEJOVlJIT2xSTE5GTTZVVXhJU1RBS0JnZ3Foa2pPUFFRREFnTklBREJGQWlFQW1RNHhsQXZXVlArTy9hNlhDU05pYUFYRU1Bb1RQVFRYRWJYMks2RVU4ZTBDSUg0QTAwSVhtUndjdGtEOHlYNzdkTVoyK0pEY1FGdDFxRktMZFR5SnVzT1UiXX0.eyJhY2Nlc3MiOltdLCJhdWQiOiJyZWdpc3RyeS5kb2NrZXIuaW8iLCJleHAiOjE2ODYzNTM2NzMsImlhdCI6MTY4NjM1MzM3MywiaXNzIjoiYXV0aC5kb2NrZXIuaW8iLCJqdGkiOiJkY2tyX2p0aV9fQ2ZYcnZYT2tCcU9sYWhEdThLT0dZb0dIOHc9IiwibmJmIjoxNjg2MzUzMDczLCJzdWIiOiIifQ.mqrAkOP2I54dBOqd1pDuyMjLtC-lZDv1HsdG0O4TqkMWoQI_ZfZ7ckvp3_2YdSAnolno3dXEygS1NKbjdUYuc_ShM_q2ngkwLzlI6TvWixU4azx6BJPySdMLmh2rRbXpIkxyNPS9NTXBsqw254mb-omtTnYhu8SfC22n6qSMnpAnmMZLcLaXH2YhaDxeWnaAkBcBc0gnxXjfz_rW6D4KGZRkQPDipqUXni6peGVBuWfIyGzOXBMJiq2pPZ6dpNFzTUW9A-V2Hbe5UMUT9zWR9zDsWgkI6LIiu4MyYbiwFy7im9sT4UEc_iJ-kuZ9IJ8DhEegVnvhK7g__Y-kEyqTtg", value);
@@ -46,7 +46,7 @@ public class DockerHubCredentialTest
     public async Task Test002()
     {
         // arrange
-        IEnumerable<string> getContens()
+        static IEnumerable<string> getContens()
         {
             yield return @"
             {
@@ -75,7 +75,7 @@ public class DockerHubCredentialTest
     public async Task Test003()
     {
         // arrange
-        IEnumerable<string> getContens()
+        static IEnumerable<string> getContens()
         {
             yield return @"
             {

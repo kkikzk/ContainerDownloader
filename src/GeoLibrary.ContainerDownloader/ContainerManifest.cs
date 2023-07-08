@@ -1,8 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GeoLibrary.ContainerDownloader;
 
-public readonly record struct ContainerManifest
+public class ContainerManifest
 {
     public readonly record struct ConfigData
     {
@@ -32,16 +33,28 @@ public readonly record struct ContainerManifest
             (MediaType, Digest, Size) = (mediaType, digest, size);
     }
 
-    [JsonPropertyName("schemaVersion")]
-    public int SchemaVersion { get; }
-    [JsonPropertyName("mediaType")]
-    public string MediaType { get; }
-    [JsonPropertyName("config")]
-    public ConfigData Config { get; }
-    [JsonPropertyName("layers")]
-    public Layer[] Layers { get; }
+    public readonly record struct ContentData
+    {
+        [JsonPropertyName("schemaVersion")]
+        public int SchemaVersion { get; }
+        [JsonPropertyName("mediaType")]
+        public string MediaType { get; }
+        [JsonPropertyName("config")]
+        public ConfigData Config { get; }
+        [JsonPropertyName("layers")]
+        public Layer[] Layers { get; }
 
-    [JsonConstructor]
-    public ContainerManifest(int schemaVersion, string mediaType, ConfigData config, Layer[] layers) =>
-      (SchemaVersion, MediaType, Config, Layers) = (schemaVersion, mediaType, config, layers);
+        [JsonConstructor]
+        public ContentData(int schemaVersion, string mediaType, ConfigData config, Layer[] layers) =>
+            (SchemaVersion, MediaType, Config, Layers) = (schemaVersion, mediaType, config, layers);
+    }
+
+    public ContentData Content { get; }
+    public string Json { get; }
+
+    public ContainerManifest(string content)
+    {
+        Content = JsonSerializer.Deserialize<ContentData>(content);
+        Json = content;
+    }
 }
