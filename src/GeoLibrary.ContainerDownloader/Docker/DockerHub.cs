@@ -33,12 +33,12 @@ public class DockerHub
         _imageName = imageName;
     }
 
-    public Task<ContainerManifest> GetConfigAsync(HttpClient client, ContainerPlatform platform, string tag, CancellationToken token)
+    public Task<ContainerManifest> GetManifestAsync(HttpClient client, ContainerPlatform platform, string tag, CancellationToken token)
     {
-        return GetConfigAsync(new HttpClientWrapper(client), platform, tag, token);
+        return GetManifestAsync(new HttpClientWrapper(client), platform, tag, token);
     }
 
-    public async Task<ContainerManifest> GetConfigAsync(IHttpClient client, ContainerPlatform platform, string tag, CancellationToken token)
+    public async Task<ContainerManifest> GetManifestAsync(IHttpClient client, ContainerPlatform platform, string tag, CancellationToken token)
     {
         client.AddDefaultRequestHeaders("Accept", "application/vnd.docker.distribution.manifest.v2+json");
         client.AddDefaultRequestHeaders("Accept", DockerManifestList.MediaType);

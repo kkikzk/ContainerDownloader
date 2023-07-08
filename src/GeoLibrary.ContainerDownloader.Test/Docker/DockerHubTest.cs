@@ -110,7 +110,7 @@ public class DockerHubTest
 
         // act
         var dockerHub = new DockerHub(auth.CompanyName, auth.ImageName);
-        var actual = await dockerHub.GetConfigAsync(client, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
+        var actual = await dockerHub.GetManifestAsync(client, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
 
         // assert
         Assert.Equal("sha256:5a81c4b8502e4979e75bd8f91343b95b0d695ab67f241dbed0d1530a35bde1eb", actual.Content.Config.Digest);
@@ -241,7 +241,7 @@ public class DockerHubTest
 
         // act
         var dockerHub = new DockerHub(auth.CompanyName, auth.ImageName);
-        var actual = await dockerHub.GetConfigAsync(client, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
+        var actual = await dockerHub.GetManifestAsync(client, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
 
         // assert
         Assert.Equal("sha256:c1aabb73d2339c5ebaa3681de2e9d9c18d57485045a4e311d9f8004bec208d67", actual.Content.Config.Digest);
