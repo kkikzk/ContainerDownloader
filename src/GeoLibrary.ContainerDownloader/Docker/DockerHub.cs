@@ -1,8 +1,5 @@
 ﻿using GeoLibrary.ContainerDownloader.OCI;
-using System;
-using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -54,44 +51,5 @@ public class DockerHub
             (2, OciManifestList.MediaType) => await new OciManifestList(content).GetManifestAsync(client, _companyName, _imageName, platform, token).ConfigureAwait(false),
             _ => throw new ContainerDownloaderException($"Schema not supported. [version={deserialized.SchemaVersion}, mediaType={deserialized.MediaType}]"),
         };
-    }
-
-    public Task PullContainerAsync(HttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
-    {
-        return PullContainerAsync(new HttpClientWrapper(client), dir, manifest, token);
-    }
-
-    public async Task PullContainerAsync(IHttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
-    {
-        if (!dir.Exists)
-        {
-            throw new ArgumentException($"Directory does not exists. [path={dir.FullName}]");
-        }
-
-        // manifest
-        var manifestFile = new FileInfo(Path.Combine(dir.FullName, "manifest.json"));
-        await File.WriteAllTextAsync(manifestFile.FullName, manifest.Json, Encoding.UTF8, token).ConfigureAwait(false);
-
-        // config
-        var configUrl = $"https://registry-1.docker.io/v2/{_companyName}/{_imageName}/blobs/{manifest.Content.Config.Digest}";
-        var configFile = new FileInfo(Path.Combine(dir.FullName, "config.json"));
-        var configStream = await client.GetStreamAsync(configUrl, token).ConfigureAwait(false);
-        using (var destinationStream = File.Create(configFile.FullName))
-        {
-            configStream.CopyTo(destinationStream);
-        }
-
-        // container
-        for (var i = 0; i < manifest.Content.Layers.Length; ++i)
-        {
-            var url = $"https://registry-1.docker.io/v2/{_companyName}/{_imageName}/blobs/{manifest.Content.Layers[i].Digest}";
-            var file = new FileInfo(Path.Combine(dir.FullName, $"layer{i}.tar.gz"));
-            var stream = await client.GetStreamAsync(url, token).ConfigureAwait(false);
-            using (var destinationStream = File.Create(file.FullName))
-            {
-                // 元のストリームを出力先のストリームにコピー
-                stream.CopyTo(destinationStream);
-            }
-        }
     }
 }

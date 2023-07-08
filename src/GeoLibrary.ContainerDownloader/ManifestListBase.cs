@@ -69,20 +69,20 @@ public abstract class ManifestListBase
 
     protected abstract string GetMediaType();
 
-    public virtual Task<ContainerManifest> GetManifestAsync(HttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
+    public virtual Task<ContainerManifest> GetManifestAsync(HttpClient client, string companyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
-        return GetManifestAsync(new HttpClientWrapper(client), campanyName, imageName, platform, token);
+        return GetManifestAsync(new HttpClientWrapper(client), companyName, imageName, platform, token);
     }
 
-    public virtual async Task<ContainerManifest> GetManifestAsync(IHttpClient client, string campanyName, string imageName, ContainerPlatform platform, CancellationToken token)
+    public virtual async Task<ContainerManifest> GetManifestAsync(IHttpClient client, string companyName, string imageName, ContainerPlatform platform, CancellationToken token)
     {
         try
         {
             var digest = GetDigest(platform);
-            var url = $"https://registry-1.docker.io/v2/{campanyName}/{imageName}/manifests/{digest}";
+            var url = $"https://registry-1.docker.io/v2/{companyName}/{imageName}/manifests/{digest}";
             var content = await client.GetContentAsStringAsync(url, token).ConfigureAwait(false);
 
-            return new ContainerManifest(content);
+            return new ContainerManifest(content, companyName, imageName);
         }
         catch (Exception ex)
         {

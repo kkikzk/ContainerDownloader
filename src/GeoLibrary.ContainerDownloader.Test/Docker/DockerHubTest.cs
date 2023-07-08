@@ -118,6 +118,20 @@ public class DockerHubTest
     }
 
     [Fact]
+    public async Task Test()
+    {
+        var client = new HttpClient();
+        using var cs = new CancellationTokenSource(100000);
+        var auth = new DockerAuthentication("library", "ubuntu", DockerRegistryAction.All);
+        await auth.ExecuteAsync(client, cs.Token);
+
+        // act
+        var dockerHub = new DockerHub(auth.CompanyName, auth.ImageName);
+        var manifest = await dockerHub.GetManifestAsync(client, new ContainerPlatform("amd64", "linux"), "latest", cs.Token);
+        await manifest.PullContainerAsync(client, new DirectoryInfo(@"C:\Users\10087901428\Desktop\temp\temp"), cs.Token);
+    }
+
+    [Fact]
     [Trait("Category", nameof(DockerHub))]
     public async Task Test002()
     {
