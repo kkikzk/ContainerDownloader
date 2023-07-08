@@ -56,12 +56,12 @@ public class DockerHub
         };
     }
 
-    public Task PullAsync(HttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
+    public Task PullContainerAsync(HttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
     {
-        return PullAsync(new HttpClientWrapper(client), dir, manifest, token);
+        return PullContainerAsync(new HttpClientWrapper(client), dir, manifest, token);
     }
 
-    public async Task PullAsync(IHttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
+    public async Task PullContainerAsync(IHttpClient client, DirectoryInfo dir, ContainerManifest manifest, CancellationToken token)
     {
         if (!dir.Exists)
         {
