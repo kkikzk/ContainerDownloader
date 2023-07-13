@@ -96,7 +96,11 @@ public abstract class ManifestListBase
         {
             if (it.Platform.Architecture == platform.Architecture && it.Platform.Os == platform.Os)
             {
-                if (string.IsNullOrEmpty(it.Platform.Variant) && string.IsNullOrEmpty(platform.Variant))
+                if (it.Platform.Variant == platform.Variant)
+                {
+                    return it.Digest;
+                }
+                else if (string.IsNullOrEmpty(it.Platform.Variant) && string.IsNullOrEmpty(platform.Variant))
                 {
                     return it.Digest;
                 }
@@ -107,10 +111,6 @@ public abstract class ManifestListBase
                 else if (string.IsNullOrEmpty(it.Platform.Variant) || !string.IsNullOrEmpty(platform.Variant))
                 {
                     continue;
-                }
-                else if (it.Platform.Architecture == platform.Architecture)
-                {
-                    return it.Digest;
                 }
             }
         }
